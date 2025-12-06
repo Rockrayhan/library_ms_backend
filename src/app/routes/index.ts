@@ -1,0 +1,26 @@
+import { Router } from "express";
+import { booksRouter } from "../modules/books/books.route";
+import { userRouter } from "../modules/user/user.route";
+import { subscriptionRouter } from "../modules/subscription/subscription.route";
+
+export const router = Router();
+
+const moduleRoutes = [
+  {
+    path: "/books",
+    route: booksRouter,
+  },
+  {
+    path: "/user",
+    route: userRouter,
+  },
+  {
+    path: "/subscriptions",
+    route: subscriptionRouter,
+  },
+
+];
+
+moduleRoutes.forEach((route) => {
+  router.use(route.path, route.route);
+});

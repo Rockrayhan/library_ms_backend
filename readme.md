@@ -1,26 +1,25 @@
 ## 📚 Library Management Backend API
+
 A simple backend API for managing books in a library system — built with **Node.js**, **Express.js**, and **MongoDB (Mongoose)**.
 
-
-###  Live link: https://assignment-3-library.vercel.app/api/books
+### Live link: https://assignment-3-library.vercel.app/api/books
 
 #### 🛠️ Technologies used: Mongoose, Express js , Node js.
 
-#### ✨ Features : 
+#### ✨ Features :
+
 - 📖 **Books**
   - Create, update, delete books
   - View all books with filtering and sorting support
   - Get a single book by ID (with validation)
-  
 - 📦 **Borrow**
+
   - Borrow a book with quantity and due date
   - Automatically manage availability and stock
   - Save borrow records
 
 - 📊 **Reports**
   - View borrow summary (with total quantity borrowed per book)
-
-
 
 #### ⚙️ How to Set Up Locally
 
@@ -29,3 +28,43 @@ A simple backend API for managing books in a library system — built with **Nod
 - in root folder go to the terminal, hit - `npm i` then `npm run dev`
 - in src/server.ts - mongoose.connect('') - here in the ('') quote give your mongodb altus connection.
 - access api locally at `http://localhost:5000/api/books` in your browser.
+
+
+
+
+
+
+
+<!-- user -->
+
+name
+email
+password
+role: "admin" | "user"
+subscription: ObjectId (Subscription)
+
+<!-- subscription -->
+
+userId
+planName
+borrowLimit
+borrowedCount
+expiresAt
+stripeSessionId
+active: boolean
+
+<!-- book -->
+
+title
+author
+cover
+description
+quantity
+availableCopies
+
+<!-- borrow -->
+
+userId
+bookId
+borrowedAt
+returnedAt (null initially)

@@ -1,26 +1,26 @@
-// import express, { Application, Request, Response } from "express";
 import { Server } from "http";
 import app from "./app";
 import mongoose from "mongoose";
-// const app : Application = express()
+import dotenv from "dotenv";
+
+dotenv.config();
 
 let server: Server;
 
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
+const MONGO_URI = process.env.MONGO_URI as string;
 
 async function main() {
   try {
-      await mongoose.connect('mongodb+srv://mongo_db:mongo_db@cluster0.shqkw.mongodb.net/library_ms?retryWrites=true&w=majority&appName=Cluster0');
-      console.log("connected to mongo");
-      
+    await mongoose.connect(MONGO_URI);
+    console.log("Connected to MongoDB");
+
     server = app.listen(PORT, () => {
       console.log(`App is listening on port ${PORT}`);
     });
   } catch (error) {
-    console.log(error);
+    console.log("MongoDB connection error:", error);
   }
 }
 
-main() 
-
-
+main();
