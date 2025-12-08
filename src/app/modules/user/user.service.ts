@@ -17,11 +17,22 @@ export const UserService = {
 
   updateUser: async (id: string, payload: any) => {
     if (!Types.ObjectId.isValid(id)) return null;
-    return User.findByIdAndUpdate(id, payload, { new: true }).populate("subscription");
+    return User.findByIdAndUpdate(id, payload, { new: true }).populate(
+      "subscription"
+    );
   },
 
   deleteUser: async (id: string) => {
     if (!Types.ObjectId.isValid(id)) return null;
     return User.findByIdAndDelete(id);
   },
+
+  getMe: async (userId: string) => {
+    const user = await User.findById(userId).select("-password");
+    return {
+      data: user,
+    };
+  },
+
+  
 };
