@@ -1,49 +1,100 @@
 import { Book } from "./books.model";
+import { Types } from "mongoose";
+import { AppError } from "../../errorHelpers/AppError";
+import httpStatus from "http-status-codes";
 
 export const BooksService = {
-  // Create book
+  // =========================================================
+  // CREATE BOOK
+  // =========================================================
   createBook: async (payload: any) => {
-    if (payload.availableCopies === 0) payload.available = false;
-    return Book.create(payload);
+    try {
+      if (payload.availableCopies === 0) {
+        payload.available = false;
+      }
+      return await Book.create(payload);
+    } catch (error: any) {
+      throw new AppError(httpStatus.BAD_REQUEST, error.message);
+    }
   },
 
-  // Get all books
+  // =========================================================
+  // GET ALL BOOKS
+  // =========================================================
   getAllBooks: async (query: any) => {
     const filterGenre = query.filter as string;
     const sortBy = query.sortBy || "createdAt";
     const sortOrder = query.sort || "desc";
     const limit = parseInt(query.limit as string) || 10;
 
-    // filter
-    let filter: any = {};
+    // FILTER BUILDER
+    const filter: any = {};
     if (filterGenre) filter.genre = filterGenre;
 
-    // sorting
+    // SORTING
     const sortCondition: any = {};
     sortCondition[sortBy] = sortOrder === "asc" ? 1 : -1;
 
-    return Book.find(filter).sort(sortCondition).limit(limit);
+    try {
+      return await Book.find(filter).sort(sortCondition).limit(limit);
+    } catch (err: any) {
+      throw new AppError(httpStatus.BAD_REQUEST, err.message);
+    }
   },
 
-  // Get single book
+  // =========================================================
+  // GET SINGLE BOOK
+  // =========================================================
   getSingleBook: async (bookId: string) => {
-    return Book.findById(bookId);
+    if (!Types.ObjectId.isValid(bookId)) {
+      throw new AppError(httpStatus.BAD_REQUEST, "Invalid book ID");
+    }
+
+    const book = await Book.findById(bookId);
+    if (!book) {
+      throw new AppError(httpStatus.NOT_FOUND, "Book not found");
+    }
+
+    return book;
   },
 
-  // Update book
+  // =========================================================
+  // UPDATE BOOK
+  // =========================================================
   updateBook: async (bookId: string, payload: any) => {
+    if (!Types.ObjectId.isValid(bookId)) {
+      throw new AppError(httpStatus.BAD_REQUEST, "Invalid book ID");
+    }
+
     if ("availableCopies" in payload) {
       const availableCopies = Number(payload.availableCopies);
       payload.available = availableCopies > 0;
     }
 
-    return Book.findByIdAndUpdate(bookId, payload, {
+    const updatedBook = await Book.findByIdAndUpdate(bookId, payload, {
       new: true,
     });
+
+    if (!updatedBook) {
+      throw new AppError(httpStatus.NOT_FOUND, "Book not found");
+    }
+
+    return updatedBook;
   },
 
-  // Delete book
+  // =========================================================
+  // DELETE BOOK
+  // =========================================================
   deleteBook: async (bookId: string) => {
-    return Book.findByIdAndDelete(bookId);
+    if (!Types.ObjectId.isValid(bookId)) {
+      throw new AppError(httpStatus.BAD_REQUEST, "Invalid book ID");
+    }
+
+    const deleted = await Book.findByIdAndDelete(bookId);
+    if (!deleted) {
+      throw new AppError(httpStatus.NOT_FOUND, "Book not found");
+    }
+
+    return deleted;
   },
 };

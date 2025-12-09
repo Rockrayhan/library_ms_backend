@@ -3,6 +3,8 @@ import { Borrow } from "./borrow.model";
 import { User } from "../user/user.model";
 import { Book } from "../books/books.model";
 import { Types } from "mongoose";
+import { AppError } from "../../errorHelpers/AppError";
+import httpStatus from "http-status-codes";
 
 export const BorrowService = {
   // =========================================================
@@ -11,43 +13,53 @@ export const BorrowService = {
   createBorrow: async (payload: any) => {
     const { user: userId, book: bookId, quantity, dueDate } = payload;
 
+    // Validate IDs
     if (!Types.ObjectId.isValid(userId) || !Types.ObjectId.isValid(bookId)) {
-      throw new Error("Invalid user or book ID");
+      throw new AppError(httpStatus.BAD_REQUEST, "Invalid user or book ID");
     }
 
     // Fetch user with subscription
     const user = await User.findById(userId).populate("subscription");
-    if (!user) throw new Error("User not found");
+    if (!user) {
+      throw new AppError(httpStatus.NOT_FOUND, "User not found");
+    }
 
     if (!user.subscription) {
-      throw new Error("User does not have an active subscription");
+      throw new AppError(
+        httpStatus.FORBIDDEN,
+        "User does not have an active subscription"
+      );
     }
 
     const subscription: any = user.subscription;
 
     // Check borrow limit
     if (user.borrowedBooks + quantity > subscription.borrowLimit) {
-      throw new Error(
-        `Borrow limit exceeded. Upgrade your subscription plan`
+      throw new AppError(
+        httpStatus.BAD_REQUEST,
+        `Borrow limit exceeded. Upgrade your subscription plan.`
       );
     }
 
     // Check book exists
     const book = await Book.findById(bookId);
-    if (!book) throw new Error("Book not found");
+    if (!book) {
+      throw new AppError(httpStatus.NOT_FOUND, "Book not found");
+    }
 
-    // Check availability based on your model
+    // Check availability
     if (book.availableCopies < quantity) {
-      throw new Error(
-        `Only ${book.availableCopies} copies available for this book`
+      throw new AppError(
+        httpStatus.BAD_REQUEST,
+        `Only ${book.availableCopies} copies available`
       );
     }
 
-    // Use your instance method to reduce book quantity
+    // Instance method: decrease book quantity
     book.borrowBook(quantity);
     await book.save();
 
-    // Increase user's borrowed count
+    // Increase user's borrow count
     user.borrowedBooks += quantity;
     await user.save();
 
@@ -66,32 +78,35 @@ export const BorrowService = {
   // =========================================================
   returnBorrow: async (borrowId: string) => {
     const borrow = await Borrow.findById(borrowId);
-    if (!borrow) throw new Error("Borrow record not found");
+    if (!borrow) {
+      throw new AppError(httpStatus.NOT_FOUND, "Borrow record not found");
+    }
 
     if (borrow.returned) {
-      throw new Error("Book already returned");
+      throw new AppError(
+        httpStatus.BAD_REQUEST,
+        "Book has already been returned"
+      );
     }
 
     const user = await User.findById(borrow.user);
     const book = await Book.findById(borrow.book);
 
-    if (!user || !book) throw new Error("User or book not found");
-
-    // Increase available copies back
-    book.availableCopies += borrow.quantity;
-
-    if (book.availableCopies > 0) {
-      book.available = true;
+    if (!user || !book) {
+      throw new AppError(httpStatus.NOT_FOUND, "User or book not found");
     }
 
+    // Add book copies back
+    book.availableCopies += borrow.quantity;
+    if (book.availableCopies > 0) book.available = true;
     await book.save();
 
-    // Decrease user borrowed count
+    // Adjust user's borrow count
     user.borrowedBooks -= borrow.quantity;
     if (user.borrowedBooks < 0) user.borrowedBooks = 0;
     await user.save();
 
-    // Mark as returned
+    // Mark borrow as returned
     borrow.returned = true;
     await borrow.save();
 

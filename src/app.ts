@@ -3,6 +3,7 @@ import express, { Application, Request, Response } from "express";
 import cors from 'cors';
 import { router } from "./app/routes";
 import cookieParser from "cookie-parser";
+import { globalErrorHandler } from "./app/middlewires/globalErrorHandler";
 
 const app: Application = express();
 app.use(express.json());
@@ -18,12 +19,12 @@ app.use(
 );
 
 
-// app.use("/api/books", booksRouter);
 
 app.use("/api", router)
 
 
-// app.use("/api/", borrowRouter);
+
+app.use(globalErrorHandler);
 
 
 
