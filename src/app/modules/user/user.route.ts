@@ -1,7 +1,6 @@
 import express from "express";
 import { UserController } from "./user.controller";
 import { checkAuth } from "../../middlewires/checkAuth";
-import { UserRole } from './user.interface';
 export const userRouter = express.Router();
 
 userRouter.post("/", UserController.createUser);

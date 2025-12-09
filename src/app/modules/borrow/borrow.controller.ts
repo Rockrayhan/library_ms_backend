@@ -1,13 +1,10 @@
-// modules/borrow/borrow.controller.ts
-
-import express, { Request, Response } from "express";
+// borrow.controller.ts
+import { Request, Response } from "express";
 import { BorrowService } from "./borrow.service";
+import { catchAsync } from "../../ultis/CatchAsync";
 
-export const borrowRouter = express.Router();
-
-// Create borrow
-borrowRouter.post("/borrow", async (req: Request, res: Response) => {
-  try {
+export const BorrowController = {
+  createBorrow: catchAsync(async (req: Request, res: Response) => {
     const result = await BorrowService.createBorrow(req.body);
 
     res.status(201).json({
@@ -15,37 +12,35 @@ borrowRouter.post("/borrow", async (req: Request, res: Response) => {
       message: "Book borrowed successfully",
       data: result,
     });
-  } catch (error: any) {
-    const message =
-      error.message === "Book not found" || error.message.includes("Not enough")
-        ? error.message
-        : "Something went wrong";
+  }),
 
-    res.status(
-      message === "Book not found" || message.includes("Not enough") ? 400 : 500
-    ).json({
-      success: false,
-      message,
-      error: error.message,
-    });
-  }
-});
-
-// Borrow summary
-borrowRouter.get("/borrow", async (req: Request, res: Response) => {
-  try {
-    const result = await BorrowService.getBorrowSummary();
+  returnBorrow: catchAsync(async (req: Request, res: Response) => {
+    const result = await BorrowService.returnBorrow(req.params.borrowId);
 
     res.status(200).json({
       success: true,
-      message: "Borrowed books summary retrieved successfully",
+      message: "Book returned successfully",
       data: result,
     });
-  } catch (error: any) {
-    res.status(500).json({
-      success: false,
-      message: "Something went wrong",
-      error: error.message,
+  }),
+
+  getUserBorrows: catchAsync(async (req: Request, res: Response) => {
+    const result = await BorrowService.getUserBorrows(req.params.userId);
+
+    res.status(200).json({
+      success: true,
+      message: "User borrow list",
+      data: result,
     });
-  }
-});
+  }),
+
+  getAllBorrows: catchAsync(async (_req: Request, res: Response) => {
+    const result = await BorrowService.getAllBorrows();
+
+    res.status(200).json({
+      success: true,
+      message: "All borrow records",
+      data: result,
+    });
+  }),
+};

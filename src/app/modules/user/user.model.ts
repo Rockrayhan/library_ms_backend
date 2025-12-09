@@ -1,7 +1,7 @@
-import { Schema, model, Document, Types } from "mongoose";
+// user.model.ts
+import { Schema, model } from "mongoose";
 import { IUser } from "./user.interface";
-import bcryptjs from 'bcryptjs';
-
+import bcryptjs from "bcryptjs";
 
 const userSchema = new Schema<IUser>(
   {
@@ -10,19 +10,22 @@ const userSchema = new Schema<IUser>(
     password: { type: String, required: true },
     role: { type: String, enum: ["admin", "user"], default: "user" },
     subscription: { type: Schema.Types.ObjectId, ref: "Subscription" },
+    borrowedBooks: { type: Number, required: true, default: 0 },
+    paymentInfo: {
+      cardBrand: { type: String },
+      last4: { type: String },
+      stripeCustomerId: { type: String },
+    },
   },
   { timestamps: true, versionKey: false }
 );
 
-
-// Hash password before saving
-userSchema.pre('save', async function (next) {
-  if (this.isModified('password')) {
-    const hashed = await bcryptjs.hash(this.password, 10);
-    this.password = hashed;
+// hash password before saving
+userSchema.pre("save", async function (next) {
+  if (this.isModified("password")) {
+    this.password = await bcryptjs.hash(this.password, 10);
   }
   next();
 });
-
 
 export const User = model<IUser>("User", userSchema);

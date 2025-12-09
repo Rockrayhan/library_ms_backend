@@ -1,6 +1,5 @@
 import express, { Application, Request, Response } from "express";
 
-import { borrowRouter } from "./app/modules/borrow/borrow.controller";
 import cors from 'cors';
 import { router } from "./app/routes";
 import cookieParser from "cookie-parser";
@@ -24,7 +23,7 @@ app.use(
 app.use("/api", router)
 
 
-app.use("/api/", borrowRouter);
+// app.use("/api/", borrowRouter);
 
 
 

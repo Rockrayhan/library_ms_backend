@@ -1,22 +1,15 @@
-import { model, Schema, Types, Document } from "mongoose";
+import { Schema, model } from "mongoose";
 import { ISubscription } from "./subscription.interface";
 
-interface SubscriptionDocument extends ISubscription, Document {}
-
-const subscriptionSchema = new Schema<SubscriptionDocument>(
+const subscriptionPlanSchema = new Schema<ISubscription>(
   {
-    userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
-    planName: { type: String, required: true },
-    borrowLimit: { type: Number, required: true, default: 1 },
-    borrowedCount: { type: Number, required: true, default: 0 },
-    expiresAt: { type: Date, required: true },
-    stripeSessionId: { type: String },
-    active: { type: Boolean, default: true },
+    planName: { type: String, required: true, enum: ["basic", "premium"] },
+    borrowLimit: { type: Number, required: true },
   },
   { timestamps: true, versionKey: false }
 );
 
-export const Subscription = model<SubscriptionDocument>(
+export const Subscription = model<ISubscription>(
   "Subscription",
-  subscriptionSchema
+  subscriptionPlanSchema
 );

@@ -37,18 +37,19 @@ A simple backend API for managing books in a library system — built with **Nod
 
 <!-- user -->
 
+id
 name
 email
 password
 role: "admin" | "user"
 subscription: ObjectId (Subscription)
+paymentInfo
 
 <!-- subscription -->
 
-userId
+id
 planName
 borrowLimit
-borrowedCount
 expiresAt
 stripeSessionId
 active: boolean
@@ -57,14 +58,44 @@ active: boolean
 
 title
 author
-cover
+genre
 description
-quantity
+in_stock
 availableCopies
+available
 
 <!-- borrow -->
 
-userId
-bookId
-borrowedAt
-returnedAt (null initially)
+user
+book
+quantity
+dueDate
+returned
+
+
+
+
+
+
+<!--==========  requirements ===========-->
+
+<!-- user -->
+1. see borrow limit
+
+2. return a book. 
+
+3. see my borrow history
+
+4. payment integration
+
+<!-- admin -->
+
+1. manage books (crud)
+
+2. manage subscription packages
+
+3. see users with borrow history
+
+4. borrow history
+
+

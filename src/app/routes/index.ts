@@ -3,6 +3,8 @@ import { booksRouter } from "../modules/books/books.route";
 import { userRouter } from "../modules/user/user.route";
 import { subscriptionRouter } from "../modules/subscription/subscription.route";
 import { AuthRoutes } from "../modules/auth/auth.route";
+import { borrowRouter } from "../modules/borrow/borrow.route";
+
 
 export const router = Router();
 
@@ -23,7 +25,10 @@ const moduleRoutes = [
     path: "/subscriptions",
     route: subscriptionRouter,
   },
-
+  {
+    path: "/borrow",
+    route: borrowRouter,
+  },
 ];
 
 moduleRoutes.forEach((route) => {

@@ -1,19 +1,19 @@
+// user.interface.ts
 import { Types } from "mongoose";
 
-export type UserRole = "admin" | "user";
-
 export interface IUser {
-  _id: Types.ObjectId;
+  _id?: Types.ObjectId;
   name: string;
   email: string;
   password: string;
-  role: UserRole;
-  subscription?: Types.ObjectId; // reference to subscription
+  role?: "admin" | "user";
+  subscription?: Types.ObjectId;  // reference to user's subscription
+  borrowedBooks : number
+  paymentInfo?: {
+    cardBrand?: string;
+    last4?: string;
+    stripeCustomerId?: string;
+  };
   createdAt?: Date;
   updatedAt?: Date;
 }
-
-
-
-
-
