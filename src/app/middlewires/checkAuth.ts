@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import AppError from "../errorHelpers/AppError";
+import {AppError} from "../errorHelpers/AppError";
 import { JwtPayload } from "jsonwebtoken";
 import { envVars } from "../config/env";
 import httpStatus from "http-status-codes";
@@ -14,7 +14,7 @@ export const checkAuth =
       const accessToken = req.headers.authorization || req.cookies.accessToken;
 
       if (!accessToken) {
-        throw new AppError(403, "No Token Recieved");
+        throw new AppError(403, "Not Logged in. Please login first.");
       }
 
       // const verifiedToken = verifyToken(accessToken, "secret") as JwtPayload

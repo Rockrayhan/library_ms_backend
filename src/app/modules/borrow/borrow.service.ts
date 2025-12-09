@@ -76,6 +76,7 @@ export const BorrowService = {
   // =========================================================
   // RETURN BORROWED BOOK
   // =========================================================
+
   returnBorrow: async (borrowId: string) => {
     const borrow = await Borrow.findById(borrowId);
     if (!borrow) {
@@ -112,6 +113,13 @@ export const BorrowService = {
 
     return borrow;
   },
+
+
+  // currently having books by the user
+  getUserCurrentBorrows: async (userId: string) => {
+    return Borrow.find({ user: userId, returned: false }).populate("book");
+  },
+
 
   // =========================================================
   // USER BORROW LIST

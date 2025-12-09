@@ -24,6 +24,17 @@ export const BorrowController = {
     });
   }),
 
+  
+  getUserCurrentBorrows: catchAsync(async (req: Request, res: Response) => {
+    const result = await BorrowService.getUserCurrentBorrows(req.params.userId);
+
+    res.status(200).json({
+      success: true,
+      message: "User's currently borrowed books",
+      data: result,
+    });
+  }),
+
   getUserBorrows: catchAsync(async (req: Request, res: Response) => {
     const result = await BorrowService.getUserBorrows(req.params.userId);
 
