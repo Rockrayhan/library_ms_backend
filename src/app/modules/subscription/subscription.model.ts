@@ -3,8 +3,9 @@ import { ISubscription } from "./subscription.interface";
 
 const subscriptionPlanSchema = new Schema<ISubscription>(
   {
-    planName: { type: String, required: true, enum: ["basic", "premium"] },
+    planName: { type: String, required: true, enum: ["basic", "premium", "standard" ] },
     borrowLimit: { type: Number, required: true },
+    price: { type: Number, required: true },
   },
   { timestamps: true, versionKey: false }
 );

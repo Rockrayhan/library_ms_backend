@@ -2,7 +2,7 @@ import bcryptjs from "bcryptjs";
 import httpStatus from "http-status-codes";
 import { User } from "../user/user.model";
 import { IUser } from "../user/user.interface";
-import AppError from "../../errorHelpers/AppError";
+import {AppError} from "../../errorHelpers/AppError";
 import { createUserTokens } from "../../ultis/userToken";
 
 const credentialsLogin = async (payload: Partial<IUser>) => {

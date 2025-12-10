@@ -10,6 +10,7 @@ export const BorrowService = {
   // =========================================================
   // CREATE BORROW
   // =========================================================
+  
   createBorrow: async (payload: any) => {
     const { user: userId, book: bookId, quantity, dueDate } = payload;
 
@@ -27,7 +28,7 @@ export const BorrowService = {
     if (!user.subscription) {
       throw new AppError(
         httpStatus.FORBIDDEN,
-        "User does not have an active subscription"
+        "you are not Subscribed. Please buy a Subscription Plan"
       );
     }
 

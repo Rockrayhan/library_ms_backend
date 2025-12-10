@@ -9,8 +9,8 @@ export const borrowRouter = express.Router();
 borrowRouter.post("/", BorrowController.createBorrow);
 
 // Return a book
-// borrowRouter.patch("/return/:id", checkAuth("admin"), BorrowController.returnBorrow);
-borrowRouter.patch("/return/:borrowId", BorrowController.returnBorrow);
+borrowRouter.patch("/return/:borrowId", checkAuth("admin"), BorrowController.returnBorrow);
+// borrowRouter.patch("/return/:borrowId", BorrowController.returnBorrow);
 
 
 // borrow.route.ts
@@ -22,5 +22,5 @@ borrowRouter.get("/current/:userId", BorrowController.getUserCurrentBorrows);
 borrowRouter.get("/user/:userId" , BorrowController.getUserBorrows);
 
 // Admin only - all borrows
-borrowRouter.get("/", checkAuth("admin"), BorrowController.getAllBorrows);
-// borrowRouter.get("/", BorrowController.getAllBorrows);
+// borrowRouter.get("/", checkAuth("admin"), BorrowController.getAllBorrows);
+borrowRouter.get("/", BorrowController.getAllBorrows);

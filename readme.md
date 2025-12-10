@@ -82,26 +82,33 @@ returned
 <!-- polish -->
 
 1. remove unecessary comments
-2. 
+2. proper checkAuth() in all routes 
+   routes with checkAuth() -> frontend use client 
+
+3. block user -> if blocked then don't let them borrow   
+<!-- 4. add image_url in books -->
+5. polish loader for every page
 
 
-<!-- user -->
+<!--=========  user ============= -->
 1. see borrow limit
 
-2. return a book. 
+<!-- 2. my currently borrowed books -->
 
-3. see my borrow history
+<!-- 3. see my borrow history -->
 
 4. payment integration
 
-<!-- admin -->
+<!--=========  admin ============= -->
 
 1. manage books (crud)
 
+<!-- 2. return a book.  -->
+
 2. manage subscription packages
 
-3. see users with borrow history
+<!-- 3. see users with borrow history -->
 
-4. borrow history
+<!-- 4. all borrow history -->
 
 

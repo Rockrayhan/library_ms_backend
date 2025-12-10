@@ -9,6 +9,7 @@ const bookSchema = new Schema<BookDocument>(
   {
     title: { type: String, required: true, trim: true },
     author: { type: String, required: true },
+    image_url: { type: String },
     genre: {
       type: String,
       required: true,
