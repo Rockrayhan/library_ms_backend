@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import {AppError} from "../errorHelpers/AppError";
+import { AppError } from "../errorHelpers/AppError";
 import { JwtPayload } from "jsonwebtoken";
 import { envVars } from "../config/env";
 import httpStatus from "http-status-codes";
@@ -13,7 +13,16 @@ export const checkAuth =
       // to get access token at header or cookie in frontend
       const accessToken = req.headers.authorization || req.cookies.accessToken;
 
+      // if (!accessToken) {
+      //   throw new AppError(403, "Not Logged in. Please login first.");
+      // }
+
+      // Allow guest access ONLY for route "/me"
       if (!accessToken) {
+        if (req.path === "/me") {
+          req.user = null;
+          return next();
+        }
         throw new AppError(403, "Not Logged in. Please login first.");
       }
 

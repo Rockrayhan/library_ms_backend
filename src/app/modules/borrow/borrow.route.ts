@@ -22,5 +22,5 @@ borrowRouter.get("/current/:userId", BorrowController.getUserCurrentBorrows);
 borrowRouter.get("/user/:userId" , BorrowController.getUserBorrows);
 
 // Admin only - all borrows
-// borrowRouter.get("/", checkAuth("admin"), BorrowController.getAllBorrows);
-borrowRouter.get("/", BorrowController.getAllBorrows);
+borrowRouter.get("/", checkAuth("admin"), BorrowController.getAllBorrows);
+// borrowRouter.get("/", BorrowController.getAllBorrows);

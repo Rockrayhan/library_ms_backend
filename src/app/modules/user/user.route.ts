@@ -7,6 +7,7 @@ userRouter.post("/", UserController.createUser);
 userRouter.get("/", checkAuth("admin"),UserController.getAllUsers);
 
 userRouter.get("/me", checkAuth("admin", "user"), UserController.getMe);
+// userRouter.get("/me", UserController.getMe);
 
 userRouter.get("/:id", UserController.getSingleUser);
 userRouter.patch("/:id", UserController.updateUser);

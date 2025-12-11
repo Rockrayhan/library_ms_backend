@@ -81,7 +81,7 @@ export const UserService = {
       throw new AppError(httpStatus.BAD_REQUEST, "Invalid user ID");
     }
 
-    const user = await User.findById(userId).select("-password");
+    const user = await User.findById(userId).select("-password").populate("subscription");
 
     if (!user) {
       throw new AppError(httpStatus.NOT_FOUND, "User not found");

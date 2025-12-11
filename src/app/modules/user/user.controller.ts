@@ -52,9 +52,31 @@ export const UserController = {
     res.status(200).json({ success: true, message: "User deleted" });
   }),
 
-  getMe: catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  // getMe: catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  //   const decodedToken = req.user as JwtPayload;
+  //   const result = await UserService.getMe(decodedToken.userId);
+  //   sendResponse(res, {
+  //     success: true,
+  //     statusCode: 200,
+  //     message: "Your profile Retrieved Successfully",
+  //     data: result.data,
+  //   });
+  // }),
+
+  getMe: catchAsync(async (req: Request, res: Response) => {
+    // no user means not logged in
+    if (!req.user) {
+      return sendResponse(res, {
+        success: true,
+        statusCode: 200,
+        message: "Guest user",
+        data: null,
+      });
+    }
+
     const decodedToken = req.user as JwtPayload;
     const result = await UserService.getMe(decodedToken.userId);
+
     sendResponse(res, {
       success: true,
       statusCode: 200,
